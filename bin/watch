@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+const chokidar = require('chokidar')
+const process = require('./view')
+
+async function processView (file) {
+  try {
+    const processed = await process(file)
+    console.log(file, '=>', processed.file)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const options = { ignoreInitial: true }
+
+chokidar.watch('./src/**/*.html', options)
+  .on('add', (file) => processView(file))
+  .on('change', (file) => processView(file))
+
+console.log('Waiting for file changes')

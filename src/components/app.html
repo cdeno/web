@@ -1,0 +1,45 @@
+<script>
+  const { Router, route, subscribers, getCurrentUrl, Link: StaticLink } = preactRouter
+  import AppHeader from './header.js'
+  import Home from './home.js'
+  import User from './user.js'
+  import Module from './module.js'
+  import CreateModule from './create-module.js'
+  import CreateVersion from './create-version.js'
+  import Version from './version.js'
+  import SearchBox from './searchbox.js'
+
+  function Callback (props) {
+    const hash = window.location.hash.substr(1).split('&')
+    const idToken = hash[0].substring('id_token='.length)
+    const token = JSON.parse(window.atob(idToken.split('.')[1]))
+    token.idToken = idToken
+
+    props.auth.updateAuthUser(token)
+
+    route('/')
+  }
+
+  export default view
+</script>
+
+<function>
+  <div>
+    <AppHeader auth={props.auth} />
+    <section class='section'>
+      <div class='container'>
+        <Router onChange=this.handleRoute>
+          <Home path='/' />
+          <User path='/user/:username' auth={props.auth} />
+          <Module path='/user/:username/:module' auth={props.auth} />
+          <CreateModule path='/create-module' auth={props.auth} />
+          <CreateVersion path='/user/:username/:module/create-version' auth={props.auth} />
+          <Version path='/user/:username/:module/:version' auth={props.auth} />
+          <Callback path='/callback' auth={props.auth} />
+        </Router>
+      </div>
+    </section>
+  </Router>
+</div>
+</function>
+

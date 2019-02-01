@@ -1,0 +1,32 @@
+<div class='columns is-centered'>
+  <div class='column is-half'>
+    <h2 class='title'>{props.username}</h2>
+    <nav class='breadcrumb'>
+      <ul>
+        <li><a href='/user/{props.username}'>{props.username}</a></li>
+        <li><a href='/user/{props.username}/{props.module}'>{props.module}</a></li>
+        <li class='is-active'><a href='#'>{props.version}</a></li>
+      </ul>
+    </nav>
+    <nav class='panel'>
+      <p class='panel-heading'>{props.version}</p>
+      <if condition='state.hasFolders'>
+        <a class='panel-block' each='folder in state.folders' href='/user/{props.username}/{props.module}'>
+          <span class='panel-icon'>
+            <i class='far fa-folder'></i>
+          </span>
+          {folder.name}
+        </a>
+      </if>
+      <if condition='state.hasFiles'>
+        <a class='panel-block' each='file in state.files' href='/user/{props.username}/{props.module}'>
+          <span class='panel-icon'>
+            <i class='fas fa-file'></i>
+          </span>
+          {file.name}
+        </a>
+      </if>
+    </nav>
+  </div>
+</div>
+  

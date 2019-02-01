@@ -1,0 +1,28 @@
+<div class='columns is-centered'>
+  <div class='column is-half'>
+    <h2 class='title'>{props.username}</h2>
+    <nav class='breadcrumb'>
+      <ul>
+        <li><a href='/user/{props.username}'>{props.username}</a></li>
+        <li class='is-active'><a href='#'>{props.module}</a></li>
+      </ul>
+    </nav>
+    <nav class='panel'>
+      <p class='panel-heading'>{props.module}</p>
+      <if condition='state.hasVersions'>
+        <a class='panel-block' each='version in state.versions' href='/user/{props.username}/{props.module}/{version}'>
+          <span class='panel-icon'>
+            <i class='fas fa-cube'></i>
+          </span>
+          {version}
+        </a>
+      <elseif condition='state.loaded'>
+        <span class='panel-block'>
+          No versions found for module `{props.module}`
+        </span>
+      </if>
+    </nav>
+    <a if='props.username === props.auth.name' href='/user/{props.username}/{props.module}/create-version'>Create new version</a>
+  </div>
+</div>
+  

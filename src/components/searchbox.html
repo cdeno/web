@@ -1,0 +1,48 @@
+<script>
+  const Suggest = Autocomplete.default
+  function suggest (query, syncResults) {
+        var results = [
+          'Afghanistan',
+          'Akrotiri',
+          'Albania',
+          'Algeria',
+          'American Samoa',
+          'Yemen',
+          'Zambia',
+          'Zimbabwe'
+          ]
+        syncResults(query
+          ? results.filter(function (result) {
+              return result.toLowerCase().indexOf(query.toLowerCase()) !== -1
+            })
+          : []
+        )
+      }
+  export default view
+</script>
+
+<function>
+  <section class="section is-medium">
+    <div class="container">
+      <div class="columns is-vcentered">
+        <div class="column is-three-fifths is-offset-one-fifth">
+          <form action='https://mail.jgthms.com/subscribe' method='POST' accept-charset='utf-8'>
+            <div class='field is-grouped'>
+              <div class='control has-icons-left is-expanded'>
+                <input type='text' placeholder='Search items, product and services' name='email' class='input is-medium is-flat' autocomplete='off' required>
+                <span class='icon is-small is-left'>
+                  <i class='fas fa-search'></i>
+                </span>
+              </div>
+              <Suggest id='autocomplete' source={suggest} />
+              <div class='control'>
+                <button class='button is-medium is-link'>
+                  <strong>Search</strong>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </section>
+</function>

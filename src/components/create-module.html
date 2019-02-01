@@ -1,0 +1,47 @@
+<div class='columns is-centered'>
+  <div class='column is-half'>
+    <h2 class='title'>Create new module</h2>
+    <article class='message is-success'>
+      <div class='message-body'>
+        Enter a name for your new module. Optionally include a description and keywords to help others discover your module. You may also put a link to the source code repository e.g. github.
+        <div class='content'>
+          <ul>
+            <li>Must be between 3 and 25 characters</li>
+            <li>Lowercase, alphanumeric characters only</li>
+            <li>Dashes or underscores are allowed to break words</li>
+          </ul>
+        </div>
+      </div>
+    </article>
+    <form onsubmit=this.onSubmit>
+      <div class='field'>
+        <div class='control'>
+          <input type='text' name='name' class='input is-medium' autocomplete='off'
+            placeholder='Name (required)' pattern={this.namePattern}
+            required='required' maxlength="25" />
+        </div>
+      </div>
+      <div class='field'>
+        <div class='control'>
+          <textarea type='text' name='description' class='textarea is-medium'
+            autocomplete='off' placeholder='Description' maxlength='500'></textarea>
+        </div>
+      </div>
+      <div class='field'>
+        <div class='control'>
+          <input type='text' name='keywords' class='input is-medium'
+          autocomplete='off' placeholder='Keywords (comma separated)' maxlength='100' />
+        </div>
+      </div>
+      <div class='field'>
+        <div class='control'>
+          <input type='url' name='repositoryUrl' class='input is-medium'
+          autocomplete='off' placeholder='Repository url' maxlength='2083' />
+        </div>
+      </div>
+      <div class='control'>
+        <button type='submit' class='button is-medium'>Create new module</button>
+      </div>
+    </form>
+  </div>
+</div>

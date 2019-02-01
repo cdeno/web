@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+const glob = require('glob')
+const process = require('./view')
+
+glob('./src/**/*.html', function (err, files) {
+  if (err) {
+    throw err
+  }
+
+  const promises = files.map(file => process(file))
+
+  Promise.all(promises)
+    .then(results => console.log(results))
+    .catch(err => console.error(err))
+})

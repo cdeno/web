@@ -1,0 +1,38 @@
+<header>
+  <nav class='navbar is-light'>
+    <div class='navbar-brand'>
+      <a class='navbar-item' href='/'>
+        <img src='/assets/logo8.png' alt='CDeNo'>
+        CDENO
+      </a>
+
+      <a role='button' class='navbar-burger'>
+        <span aria-hidden='true'></span>
+        <span aria-hidden='true'></span>
+        <span aria-hidden='true'></span>
+      </a>
+    </div>
+
+    <div class='navbar-menu'>
+      <div class='navbar-end'>
+          <if condition='props.auth.isAuthenticated'>
+            <div class='navbar-item has-dropdown is-hoverable'>
+              <a class='navbar-link'>{props.auth.name}</a>
+              <div class='navbar-dropdown is-right'>
+                <a class='navbar-item' href='/user/{props.auth.name}'><strong>My Modules</strong></a>
+                <a class='navbar-item' href='/create-module'><strong>Add Module</strong></a>
+                <div class='divider' />
+                <a class='navbar-item' href='https://cdeno.auth.eu-west-1.amazoncognito.com/logout?response_type=token&client_id=7p1bfjcc5c64lnru9mbc200f4n&redirect_uri=http://localhost:3002/callback'><strong>Logout</strong></a>
+              </div>
+            </div>
+          <else>
+            <div class='navbar-item'>
+              <div class='buttons'>
+                <a class='button is-light' href='https://cdeno.auth.eu-west-1.amazoncognito.com/login?response_type=token&client_id=7p1bfjcc5c64lnru9mbc200f4n&redirect_uri=http://localhost:3002/callback'>Log in</a>
+              </div>
+            </div>
+          </if>
+      </div>
+    </div>
+  </nav>
+</header>
