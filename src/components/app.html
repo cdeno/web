@@ -7,7 +7,7 @@
   import CreateModule from './create-module.js'
   import CreateVersion from './create-version.js'
   import Version from './version.js'
-  import SearchBox from './searchbox.js'
+  import Match from './match.js'
 
   function Callback (props) {
     const hash = window.location.hash.substr(1).split('&')
@@ -15,9 +15,14 @@
     const token = JSON.parse(window.atob(idToken.split('.')[1]))
     token.idToken = idToken
 
-    props.auth.updateAuthUser(token)
+    const { auth } = props
+    auth.updateAuthUser(token)
 
-    route('/')
+    setTimeout(() => {
+      auth.isAuthenticated
+      ? route(`/user/${auth.name}`)
+      : route('/')
+    })
   }
 
   export default view
@@ -25,21 +30,24 @@
 
 <function>
   <div>
-    <AppHeader auth={props.auth} />
+    <Match path='/' auth={props.auth}>
+      <function>
+        <AppHeader auth={props.auth} />
+      </function>
+    </Match>
     <section class='section'>
       <div class='container'>
         <Router onChange=this.handleRoute>
           <Home path='/' />
           <User path='/user/:username' auth={props.auth} />
           <Module path='/user/:username/:module' auth={props.auth} />
-          <CreateModule path='/create-module' auth={props.auth} />
-          <CreateVersion path='/user/:username/:module/create-version' auth={props.auth} />
-          <Version path='/user/:username/:module/:version' auth={props.auth} />
+          <Version path='/user/:username/:module/:version/:path*' auth={props.auth} />
           <Callback path='/callback' auth={props.auth} />
+          <CreateModule path='/create-module' auth={props.auth} protected />
+          <CreateVersion path='/user/:username/:module/create-version' auth={props.auth} protected />
         </Router>
       </div>
     </section>
-  </Router>
 </div>
 </function>
 

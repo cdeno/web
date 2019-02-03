@@ -1,4 +1,5 @@
 import api from '../api.js'
+import protect from './protect.js'
 import view from './create-version.html.js'
 
 const { route } = window.preactRouter
@@ -30,15 +31,22 @@ export default class CreateVersion extends Component {
     this.auth = props.auth
     this.onSubmit = this.onSubmit.bind(this)
     this.onFileChange = this.onFileChange.bind(this)
-    this.render = view
+    this.render = protect(this, view)
   }
 
   onFileChange (e) {
     e.preventDefault()
     const input = e.target
     const file = input.files[0]
-    const fileName = file.name
-    this.setState({ fileName })
+
+    if (file.size > 5243000) {
+      input.value = ''
+      window.alert('The .zip file too big. Maximum size is 5MB.')
+      return false
+    } else {
+      const fileName = file.name
+      this.setState({ fileName })
+    }
   }
 
   onSubmit (e) {

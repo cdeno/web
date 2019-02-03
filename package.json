@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "bin/build",
-    "watch": "bin/watch"
+    "watch": "bin/watch",
+    "dist": "npm run build && bin/dist"
   },
-  "author": "",
+  "author": "davidjamesstone",
   "license": "ISC",
   "devDependencies": {
     "chokidar": "2.0.4",

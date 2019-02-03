@@ -18,4 +18,8 @@ export default class Auth {
   saveAuthUser () {
     window.localStorage.setItem('authUser', JSON.stringify(this.token))
   }
+
+  clearAuthUser () {
+    window.localStorage.removeItem('authUser')
+  }
 }

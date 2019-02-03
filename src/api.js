@@ -1,6 +1,12 @@
 import { log, logErr } from './log.js'
 
-const baseUrl = 'https://ltvj5zswmg.execute-api.eu-west-1.amazonaws.com/dev'
+const apiUrl = 'https://i4cev2ahuj.execute-api.eu-west-1.amazonaws.com/dev'
+const s3ApiUrl = 'https://s3-eu-west-1.amazonaws.com/cdeno'
+
+function logErrAndRethrow (err) {
+  logErr(err)
+  throw err
+}
 
 const api = {
   get (url) {
@@ -13,7 +19,7 @@ const api = {
         }
       })
       .then(res => res.json())
-      .catch(logErr)
+      .catch(logErrAndRethrow)
   },
 
   post (url, body, idToken) {
@@ -34,7 +40,7 @@ const api = {
           throw new Error(json.error || 'Unknown error')
         }
       }))
-      .catch(logErr)
+      .catch(logErrAndRethrow)
   },
 
   xhr (url, callback) {
@@ -59,7 +65,7 @@ const api = {
 
   getFiles (prefix) {
     return new Promise((resolve, reject) => {
-      const url = `http://s3-eu-west-1.amazonaws.com/cdeno/?list-type=2&delimiter=/&prefix=${prefix}`
+      const url = `${s3ApiUrl}/?list-type=2&delimiter=/&prefix=${prefix}`
       api.xhr(url, (err, res) => {
         if (err) {
           reject(err)
@@ -70,24 +76,43 @@ const api = {
       })
     })
   },
+
+  getFile (key) {
+    return new Promise((resolve, reject) => {
+      const url = `${s3ApiUrl}/${key}`
+      api.xhr(url, (err, res) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        const data = res.responseText
+        resolve(data)
+      })
+    })
+  },
+
   getUserModules (username) {
-    return api.get(`${baseUrl}/user/${username}`)
+    return api.get(`${apiUrl}/user/${username}`)
   },
 
   createUserModule ({ name, description, keywords, repositoryUrl }, idToken) {
-    return api.post(`${baseUrl}/create-module`, { name, description, keywords, repositoryUrl }, idToken)
+    return api.post(`${apiUrl}/create-module`, { name, description, keywords, repositoryUrl }, idToken)
   },
 
   createVersion (module, { major, minor, revision }, idToken) {
-    return api.post(`${baseUrl}/create-version`, { module, major, minor, revision }, idToken)
+    return api.post(`${apiUrl}/create-version`, { module, major, minor, revision }, idToken)
   },
 
-  getModuleVersions ({ username, module }) {
-    return api.get(`${baseUrl}/user/${username}/${module}`)
+  getModule ({ username, module }) {
+    return api.get(`${apiUrl}/user/${username}/${module}`)
   },
 
   getVersionFiles ({ username, module, version }) {
-    return api.get(`${baseUrl}/user/${username}/${module}`)
+    return api.get(`${apiUrl}/user/${username}/${module}`)
+  },
+
+  getModules ({ type }) {
+    return api.get(`${apiUrl}/modules?type=${type}`)
   }
 }
 
@@ -97,7 +122,7 @@ function mapFolderItem (prefix, item) {
   const key = item.Prefix['#text']
   return {
     key,
-    name: key.substr(prefix.length)
+    name: key.slice(prefix.length, -1)
   }
 }
 
@@ -127,7 +152,7 @@ function formatS3XMLListBucketResult (xml) {
   return {
     count: +json.KeyCount['#text'],
     prefix: prefix,
-    files: mapItems(prefix, json.Contents, mapFileItem),
+    files: mapItems(prefix, json.Contents, mapFileItem).filter(item => item.key !== prefix),
     folders: mapItems(prefix, json.CommonPrefixes, mapFolderItem)
   }
 }

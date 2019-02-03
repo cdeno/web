@@ -1,7 +1,6 @@
 <div class='columns is-centered'>
   <div class='column is-half'>
     <form onsubmit=this.onSubmit>
-      <h2 class='title'>{props.username}</h2>
       <nav class='breadcrumb'>
         <ul>
           <li><a href='/user/{props.username}'>{props.username}</a></li>
@@ -17,7 +16,6 @@
           <div class="content">
           <ul>
             <li>Maximum .zip file size is 5Mb</li>
-            <li>Only .js, .json, .ts files are accepted</li>
             <li>The version number must be unique</li>
           </ul>
         </div>
@@ -26,7 +24,7 @@
       <div class='field'>
         <div class='file is-medium {state.fileName ? " has-name" : ""}'>
           <label class='file-label'>
-            <input class='file-input' type='file' name='file' accept='.zip' onchange=this.onFileChange>
+            <input class='file-input' type='file' name='file' accept='.zip' onchange=this.onFileChange required="required">
             <span class='file-cta'>
               <span class='file-icon'>
                 <i key='icon' class='fas fa-upload'></i>
@@ -42,13 +40,13 @@
           <div class='field'>
               <div class='columns'>
                 <div class='column'>
-                  <input type='number' name='major' class='input is-medium' placeholder='Major' autocomplete='off' />
+                  <input type='number' name='major' min=0 max=99999 class='input is-medium' placeholder='Major' autocomplete='off' required="required" />
                 </div>
                 <div class='column'>
-                  <input type='number' name='minor' class='input is-medium' placeholder='Minor' autocomplete='off' />
+                  <input type='number' name='minor' min=0 max=99999 class='input is-medium' placeholder='Minor' autocomplete='off' required="required" />
                 </div>
                 <div class='column'>
-                  <input type='number' name='revision' class='input is-medium' placeholder='Revision' autocomplete='off' />
+                  <input type='number' name='revision' min=0 max=99999 class='input is-medium' placeholder='Revision' autocomplete='off' required="required" />
                 </div>
               </div>
           </div>

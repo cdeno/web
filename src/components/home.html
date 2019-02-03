@@ -1,4 +1,38 @@
-<h1>
-  Home
-</h1>
-  
+<div class='columns is-centered'>
+  <div class='column is-half'>
+    <h1 class='title'>
+      cdeno
+      <h2 class='subtitle'>
+        A CDN for deno modules
+      </h2>
+    </h1>
+    <nav class='panel'>
+      <p class='panel-heading'>Recently added modules</p>
+      <if condition='state.hasModules'>
+        <!-- <a class='panel-block' each='module in state.modules'>
+          <span class='panel-icon'>
+            <i class='fas fa-cubes'></i>
+          </span>
+          {module.name}
+        </a> -->
+        <div class='panel-block' each='module in state.modules'>
+          <article class='media'>
+            <div class='media-content'>
+              <div class='content'>
+                <p>
+                  <strong><a href='/user/{module.username}/{module.name}'>{module.name}</a></strong>{' '}<a href='/user/{module.username}'>@{module.username}</a>
+                  <br>
+                  {module.description}
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      <elseif condition='state.loaded'>
+        <span class='panel-block'>
+          No modules found
+        </span>
+      </if>
+    </nav>
+  </div>
+</div>

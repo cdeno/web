@@ -8,16 +8,49 @@ export default class Version extends Component {
     this.render = view
   }
 
+  get pathCrumbs () {
+    const { username, module, version, path } = this.props
+    const paths = path.split('/')
+    return paths.map((path, index) => ({
+      name: path,
+      href: `/user/${username}/${module}/${version}/${paths.slice(0, index + 1).join('/')}`
+    }))
+  }
+
+  getFileUrl () {
+    const { username, module, version, path } = this.props
+    return `http://cdeno.org/${username}/${module}/${version}/${path}`
+  }
+
+  load (props) {
+    const { username, module, version, path, type } = props
+
+    if (type === 'file') {
+      api.getFile(`${username}/${module}/${version}/${path}`)
+        .then(data => this.setState({
+          isFile: true,
+          loaded: true,
+          content: data
+        }))
+    } else {
+      api
+        .getFiles(`${username}/${module}/${version}/${path && path + '/'}`)
+        .then(data => this.setState({
+          isFile: false,
+          files: data.files,
+          folders: data.folders,
+          loaded: true,
+          hasFiles: !!data.files.length,
+          hasFolders: !!data.folders.length
+        }))
+    }
+  }
+
   componentDidMount () {
-    const { username, module, version } = this.props
-    api
-      .getFiles(`${username}/${module}/${version}/`)
-      .then(data => this.setState({
-        files: data.files,
-        folders: data.folders,
-        loaded: true,
-        hasFiles: !!data.files.length,
-        hasFolders: !!data.folders.length
-      }))
+    this.load(this.props)
+  }
+
+  componentWillReceiveProps (props) {
+    this.load(props)
   }
 }

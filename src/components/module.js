@@ -10,8 +10,9 @@ export default class Module extends Component {
 
   componentDidMount () {
     api
-      .getModuleVersions(this.props)
-      .then(versions => this.setState({
+      .getModule(this.props)
+      .then(({ module, versions }) => this.setState({
+        module,
         versions,
         loaded: true,
         hasVersions: !!versions.length
