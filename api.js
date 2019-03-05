@@ -1,7 +1,7 @@
 import { log, logErr } from './log.js'
 
-const apiUrl = 'https://i4cev2ahuj.execute-api.eu-west-1.amazonaws.com/dev'
-const s3ApiUrl = 'https://s3-eu-west-1.amazonaws.com/cdeno'
+const apiUrl = 'https://93ijlt6nog.execute-api.eu-west-2.amazonaws.com/dev'
+const s3ApiUrl = 'https://s3-eu-west-2.amazonaws.com/cdeno'
 
 function logErrAndRethrow (err) {
   logErr(err)
@@ -18,7 +18,10 @@ const api = {
           'Content-Type': 'application/json'
         }
       })
-      .then(res => res.json())
+      .then(res => res.json().then(json => {
+        res.data = json
+        return res
+      }))
       .catch(logErrAndRethrow)
   },
 
@@ -35,7 +38,8 @@ const api = {
       })
       .then(res => res.json().then(json => {
         if (res.ok) {
-          return json
+          res.data = json
+          return res
         } else {
           throw new Error(json.error || 'Unknown error')
         }
@@ -92,27 +96,27 @@ const api = {
   },
 
   getUserModules (username) {
-    return api.get(`${apiUrl}/user/${username}`)
+    return api.get(`${apiUrl}/module/${username}`)
   },
 
-  createUserModule ({ name, description, keywords, repositoryUrl }, idToken) {
-    return api.post(`${apiUrl}/create-module`, { name, description, keywords, repositoryUrl }, idToken)
+  // createUserModule ({ name, description, keywords, repositoryUrl }, idToken) {
+  //   return api.post(`${apiUrl}/create-module`, { name, description, keywords, repositoryUrl }, idToken)
+  // },
+
+  // createVersion (module, { major, minor, revision }, idToken) {
+  //   return api.post(`${apiUrl}/create-version`, { module, major, minor, revision }, idToken)
+  // },
+
+  getModule (moduleId) {
+    return api.get(`${apiUrl}/module/${moduleId}`)
   },
 
-  createVersion (module, { major, minor, revision }, idToken) {
-    return api.post(`${apiUrl}/create-version`, { module, major, minor, revision }, idToken)
+  getVersions (moduleId) {
+    return api.get(`${apiUrl}/version/${moduleId}`)
   },
 
-  getModule ({ username, module }) {
-    return api.get(`${apiUrl}/user/${username}/${module}`)
-  },
-
-  getVersionFiles ({ username, module, version }) {
-    return api.get(`${apiUrl}/user/${username}/${module}`)
-  },
-
-  getModules ({ type }) {
-    return api.get(`${apiUrl}/modules?type=${type}`)
+  findModules ({ type, query }) {
+    return api.get(`${apiUrl}/module?type=${type}&query=${query}`)
   }
 }
 
@@ -132,7 +136,7 @@ function mapFileItem (prefix, item) {
     key: key,
     name: key.substr(prefix.length),
     size: item.Size['#text'],
-    createdAt: item.LastModified['#text']
+    createdAt: new Date(item.LastModified['#text']).getTime()
   }
 }
 
